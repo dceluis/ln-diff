@@ -1,0 +1,51 @@
+## The *editblock* format and rules:
+
+Every *editblock* uses this format:
+1. The file path alone on a line, verbatim. No bold asterisks, no quotes around it, no escaping of characters, etc.
+2. The opening tag: <editblock>
+3. The Start of REMOVE section line: <<<<<<< REMOVE
+4. A chunk of numbered lines to REMOVE from the latest SOURCE code
+5. The dividing line: =======
+6. A chunk of lines to INSERT into the latest SOURCE code
+7. The End of INSERT section line: >>>>>>> INSERT
+8. The closing tag: </editblock>
+
+Example:
+/path/to/file.py
+<editblock>
+<<<<<<< REMOVE
+1│def my_function():
+2│    print("old code")
+3│    return None
+=======
+ │def my_function():
+ │    print("new code")
+ │    return True
+>>>>>>> INSERT
+</editblock>
+
+Each *editblock* contains exactly one Start of REMOVE section line '<<<<<<< REMOVE'.
+Each *editblock* contains exactly one End of INSERT section line '>>>>>>> INSERT'.
+
+Inside the REMOVE section, numbers separated by a pipe `│` are prefixed to each line.
+Inside the INSERT section, spaces  separated by a pipe `│` are prefixed to each line.
+Prefixed spaces and numbers ensure all pipe separators `│` are aligned.
+
+It is crucial to maintain line numbers and contents *EXACTLY* as they appear in
+the latest SOURCE file, character for character. The effectiveness and
+reliability of the *editblock* format heavily depend on strict adherence to this
+rule.
+
+Line numbers in the REMOVE section are strictly consecutive with no gaps between
+them, adjacent to each other, and unique, as each REMOVE section handles
+removing one continuous section of code. Each REMOVE section contains a
+complete, unbroken sequence of line numbers from the latest SOURCE contents. The
+INSERT section content will be placed as a whole unit at the position of the
+first REMOVE line, so attempting to combine disjointed lines into a single
+*editblock* will cause errors and is not supported.
+
+*editblocks* are independent and do not assume sequential application.
+
+For code relocation within a file, two separate *editblocks* are utilized: the
+first for removing the code from its original position, and the second for
+inserting it into its new location.
