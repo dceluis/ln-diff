@@ -42,28 +42,35 @@ The format is simple at it's core:
 
 This format was conceived with LLMs in mind, with the most common use case being code generation and assistance. As such, many of its design decisions were made to guide code generation models attention into sourcing from the correct content and generating high quality responses.
 
-Q: Why line numbers?
+**Q: Why line numbers?**
+
 A: Line numbers serve multiple purposes:
 - Line numbers in *both* the source and editblocks helps llms recite the exact line more accurately.
 - It is algorithmically simpler for LLMs to understand.
 - It allows clients to stream the response and detect the exact line an edit will apply, removing and inserting lines as they come, theoretically reducing the time-to-response. (TODO: Need a working demo to verify this)
 
-Q: Then why no line numbers in the INSERT section?
+**Q: Then why no line numbers in the INSERT section?**
+
 A: Technically, prefixing line numbers to INSERT section lines should not prevent the line to be inserted into the document. But as mentioned, prefixed line numbers "prime" the model to recite the source line. So, if the conversation is filled with unnecessary line numbers in both user and assistant-generated code then it becomes noise and the assistant might choose its own content as source content. This breaks the format's contract and decreases the quality of the generated code.
 
-Q: Why numbered source files?
+**Q: Why numbered source files?**
+
 A: Source files need to be prefixed the line numbers so that the lines to REMOVE can be recited accurately and sequentially.
 
-Q: Why use continuous blocks?
+**Q: Why use continuous blocks?**
+
 A: Placing code in the REMOVE section means placing it in a very privileged position for AI code generation: close to the generated replacement in the INSERT section. Continuous, recited code probably retains more of the underlying correctness and semantics. This kind of high quality context is what we need to be close to the generated code.
 
-Q: Why use an aligned pipe?
+**Q: Why use an aligned pipe?**
+
 A[ The "pipe" symbol used is not your regular keyboard pipe but actually unicode's [U+2502](https://www.htmlsymbols.xyz/unicode/U+2502) called "Box drawings light vertical". This is a common symbol used to draw lines in text-only applications and may be understood by LLMs (TODO: verify this) to be the divider between the line number and the actual line contents. Alignment may help with reducing indentation errors in generated code.
 
-Q: Why the name?
+**Q: Why the name?**
+
 A: ln-diff stands for line-number-diff. But even though the format is called like that for human reference, I found no use in mentioning this to language models. In fact, just mentionin the word "diff" will poison the reasoning abilities of smaller LLMs, making it generate edits in the Unified Diff format or simply degrading the quality of ln-diff editblocks. I avoided the word "diff" in the [first]() version, and used the word *editblock* (instead of *hunk* or other similar words, for the same reason).
 
-Q: Why independent, non-sequential editblocks?
+**Q: Why independent, non-sequential editblocks?**
+
 A: Again, this comes down to leveraging the LLM strengths: it is easier for them to recite numbered lines from source if the line numbers are considered immutable, even if multiple editblocks have already been generated.
 
 Even with these considerations, additional prompting is commonly required to make the model actually follow this simple format. The smaller/older the model is the harder it will be. This issue should be no surprise and is not unique to this format.
@@ -98,7 +105,8 @@ Some of the things I found useful:
 
 Ideally this flexibility will be less important as models get more capable.
 
-> NOTE: This flexibility only applies to the client's side, though. Depending on the model's instruction-following capabilities, the wording of the assistant's system prompt must range from 'follow the editblock format' to instructing it to treat the format as an unbreakable, sacrosanct contract. See the /examples folder for examples for common language models.
+> [!NOTE]
+> This flexibility only applies to the client's side, though. Depending on the model's instruction-following capabilities, the wording of the assistant's system prompt must range from 'follow the editblock format' to instructing it to treat the format as an unbreakable, sacrosanct contract. See the /examples folder for examples for common language models.
 
 ### Applying non-sequential editblocks
 
