@@ -1,0 +1,15 @@
+This document incorporates modified material from [Aider](https://github.com/Aider-AI/aider), licensed under the Apache License, Version 2.0.
+
+The lines
+
+Every *editblock* uses this format:
+1. The file path alone on a line, verbatim. No bold asterisks, no quotes around it, no escaping of characters, etc.
+2. The opening tag: <editblock>
+3. The Start of REMOVE section line: <<<<<<< REMOVE
+4. A chunk of numbered lines to REMOVE from the latest SOURCE code
+5. The dividing line: =======
+6. A chunk of lines to INSERT into the latest SOURCE code
+7. The End of INSERT section line: >>>>>>> INSERT
+8. The closing tag: </editblock>
+
+are attributed to Aider.
