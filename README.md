@@ -112,6 +112,11 @@ Ideally this flexibility will be less important as models get more capable.
 
 Even though editblocks are non-sequential, clients will indeed need to track how many have already been applied, or store and apply all of them at the same time, so that they modify the source file cleanly. This is expected and in line with moving the algorithmic complexity away from the assistant's reasoning into the actual client software.
 
+## Examples
+
+- Aider integration [demo](https://github.com/Aider-AI/aider/pull/2174).
+- kznllm experimental linediff dev [branch](https://github.com/dceluis/kznllm.nvim/tree/dev/lua/kznllm/lndiff).
+
 ## Current Status
 
 - This format will evolve based on futher benchmarking
